@@ -1,7 +1,7 @@
-const app = require("express")();
+const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
-const receive = app();
+const app = express();
 
 app.use(
   session({
@@ -18,9 +18,9 @@ mongoose
   })
   .then(() => {
     console.log("connected to DB");
-});
+  });
 
-receive.use(require("controller/user.js"));
+app.use(require("./controller/user.js"));
 
 app.listen(3000, () => {
   console.log("server running on port 3000");
