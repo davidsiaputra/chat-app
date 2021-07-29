@@ -1,8 +1,8 @@
-import React from "react";
+import "./form-input.styles.scss";
 
 export default function FormGroup({ handleChange, label, ...otherProps }) {
   return (
-    <div className="form-group">
+    <div className="group">
       <input
         type="text"
         className="form-input"

@@ -1,12 +1,12 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
 
-import "./sign-in.styles.scss";
+import "./sign-up.styles.scss";
 
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
 
-export default class SignIn extends Component {
+export default class SignUp extends Component {
   constructor(props) {
     super(props);
 
@@ -14,6 +14,7 @@ export default class SignIn extends Component {
       username: "",
       email: "",
       password: "",
+      confirmPassword: "",
     };
   }
 
@@ -23,8 +24,26 @@ export default class SignIn extends Component {
     this.setState({ [name]: value });
   };
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
+    const { username, email, password, confirmPassword } = this.state;
+
+    if (password !== confirmPassword) {
+      alert("Password do not match");
+      return;
+    }
+
+    try {
+      this.setState({
+        email: "",
+        password: "",
+        confirmPassword: "",
+        username: "",
+      });
+    } catch (error) {
+      console.log("Failed to sign up, ", error.message);
+      return;
+    }
   };
 
   render() {
@@ -34,10 +53,10 @@ export default class SignIn extends Component {
           <strong>&#8592;</strong>BACK TO HOME
         </Link>
         <p className="title">
-          <strong>Login</strong> below
+          <strong>Register</strong> below
         </p>
         <p className="subtitle">
-          Don't have an account? <Link to="/signup">Register</Link>
+          Already have an account? <Link to="/signup">Login</Link>
         </p>
         <form onSubmit={this.handleSubmit}>
           <FormInput
@@ -48,14 +67,28 @@ export default class SignIn extends Component {
             handleChange={this.handleChange}
           />
           <FormInput
+            type="email"
+            label="EMAIL"
+            name="email"
+            value={this.state.email}
+            handleChange={this.handleChange}
+          />
+          <FormInput
             type="password"
             label="PASSWORD"
             name="password"
             value={this.state.password}
             handleChange={this.handleChange}
           />
+          <FormInput
+            type="password"
+            label="CONFIRM PASSWORD"
+            name="confirmPassword"
+            value={this.state.confirmPassword}
+            handleChange={this.handleChange}
+          />
           <div className="buttons">
-            <CustomButton type="submit">SIGN IN</CustomButton>
+            <CustomButton type="submit">SIGN UP</CustomButton>
           </div>
         </form>
       </div>
