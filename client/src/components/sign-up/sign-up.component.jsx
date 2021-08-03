@@ -56,7 +56,7 @@ export default class SignUp extends Component {
           <strong>Register</strong> below
         </p>
         <p className="subtitle">
-          Already have an account? <Link to="/signup">Login</Link>
+          Already have an account? <Link to="/signin">Login</Link>
         </p>
         <form onSubmit={this.handleSubmit}>
           <FormInput
