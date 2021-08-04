@@ -1,8 +1,13 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const session = require("express-session");
+import express from "express";
+import session from "express-session";
+import db from "./mongodb";
 const app = express();
 
+// config
+const port = process.env.PORT || 3000;
+
+// middleware
+app.use(express.json());
 app.use(
   session({
     secret: "add a random secret string here",
@@ -11,17 +16,11 @@ app.use(
   })
 );
 
-mongoose
-  .connect("mongodb://localhost/myapp", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("connected to DB");
-  });
+// Routes
+app.get("/", () => {
+  res.status(200).send("SUCCESS");
+});
 
-app.use(require("./controller/user.js"));
-
-app.listen(3000, () => {
-  console.log("server running on port 3000");
+app.listen(port, () => {
+  console.log(`server running on port ${port}`);
 });

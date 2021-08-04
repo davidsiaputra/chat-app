@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import collections from "./types";
 
-const UserSchema = new mongoose.Schema({
-  email: {
+const MessageSchema = new mongoose.Schema({
+  text: {
     type: String,
     required: true,
   },
@@ -10,12 +10,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  hashedPw: {
-    type: String,
+  timestamp: {
+    type: Date,
     required: true,
   },
 });
 
-const User = mongoose.model(collections.USERS, UserSchema);
+const Message = mongoose.model(collections.MESSAGES, MessageSchema);
 
-export default User;
+export default Message;
