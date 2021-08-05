@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import pusher from "'./pusher'";
-import collections from "./model/types";
+import pusher from "./pusher.js";
+import collections from "./model/types.js";
 
 const db_url = `mongodb+srv://admin:oWLwdGhxt1rERPy9@cluster0.fq1ip.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 mongoose.connect(db_url, {

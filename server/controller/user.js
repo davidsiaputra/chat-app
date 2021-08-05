@@ -1,6 +1,6 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import User from "./model";
+import User from "../model/user.js";
 
 const router = express.Router();
 
@@ -9,9 +9,11 @@ router.post("/register", async (req, res) => {
     const { username, password } = req.body;
 
     const hashedPw = await bcrypt.hash(password, 12);
-    const user = new User({ username, hashedPw });
-
-    await user.save();
+    const user = await User.create({
+      username,
+      hashedPw,
+    });
+    console.log(user);
     return res.status(200).send({ user });
   } catch (err) {
     return res.status(400).send({ err });
@@ -20,9 +22,19 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
+    console.log("test2");
     const { username, password } = req.body;
 
-    const user = await User.findOne({ username });
+    console.log("test");
+
+    const user = await User.findOne({ username }).exec();
+    if (!user) {
+      return res
+        .status(400)
+        .send({ success: false, message: "User not found" });
+    }
+
+    console.log("test1");
 
     // hashedPw is `salt with hash attached to it
     const passwordMatched = await bcrypt.compare(password, user.hashedPw);

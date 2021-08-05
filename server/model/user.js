@@ -1,11 +1,8 @@
 import mongoose from "mongoose";
-import collections from "./types";
+import db from "../mongodb.js";
+import collections from "./types.js";
 
 const UserSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-  },
   username: {
     type: String,
     required: true,
@@ -16,6 +13,6 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model(collections.USERS, UserSchema);
+const User = db.model(collections.USERS, UserSchema);
 
 export default User;

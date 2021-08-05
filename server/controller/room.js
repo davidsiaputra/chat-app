@@ -1,5 +1,5 @@
 import express from "express";
-import Room from "../model/room";
+import Room from "../model/room.js";
 
 const router = express.Router();
 
@@ -82,3 +82,5 @@ router
   });
 
 router.route("/:roomId/messages");
+
+export default router;

@@ -1,4 +1,4 @@
-import User from "./user";
-import Message from "./message";
+import User from "./user.js";
+import Message from "./message.js";
 
 export { User, Message };
