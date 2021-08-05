@@ -23,10 +23,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    console.log("test2");
     const { username, password } = req.body;
-
-    console.log("test");
 
     const user = await User.findOne({ username }).exec();
     if (!user) {
@@ -34,8 +31,6 @@ router.post("/login", async (req, res) => {
         .status(400)
         .send({ success: false, message: "User not found" });
     }
-
-    console.log("test1");
 
     // hashedPw is `salt with hash attached to it
     const passwordMatched = await bcrypt.compare(password, user.hashedPw);

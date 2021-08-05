@@ -7,10 +7,10 @@ router
   .route("/")
   .post(async (req, res) => {
     try {
-      const { name } = req.body;
+      const { roomName } = req.body;
 
       const room = new Room({
-        name,
+        name: roomName,
       });
       await room.save();
 
@@ -21,7 +21,7 @@ router
   })
   .get(async (req, res) => {
     try {
-      const rooms = await Room.find();
+      const rooms = await Room.find().exec();
 
       return res.status(200).send({ success: true, rooms });
     } catch (err) {

@@ -1,6 +1,6 @@
 import express from "express";
 
-import { Message } from "../model";
+import { Message } from "../model/index.js";
 
 const router = express.Router();
 

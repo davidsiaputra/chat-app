@@ -17,19 +17,23 @@ db.once("open", () => {
   const roomsChangeStream = roomsCollection.watch();
 
   roomsChangeStream.on("change", (change) => {
-    const { operationType, fullDocument } = change;
-
-    switch (operationType) {
-      case "insert":
+    switch (change.operationType) {
+      case "insert": {
         console.log("Insert in rooms collection");
-        const { username, text, roomId } = fullDocument;
-        pusher.trigger(`rooms-${roomId}`, "updated", {
-          username,
-          text,
-        });
+
+        pusher.trigger("rooms", "insert", change.fullDocument);
+        break;
+      }
+
+      case "update": {
+        console.log("Update in rooms collection");
+
+        const { documentKey } = change;
+        pusher.trigger(`rooms-${documentKey._id}}`, "updated", {});
+      }
 
       default:
-        console.log(`${operationType} is not handled`);
+        console.log(`${change.operationType} is not handled`);
         return;
     }
   });

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import db from "../mongodb.js";
 import collections from "./types.js";
 
 const RoomSchema = new mongoose.Schema({
@@ -9,6 +10,6 @@ const RoomSchema = new mongoose.Schema({
   messageIds: [mongoose.Schema.Types.ObjectId],
 });
 
-const Room = mongoose.model(collections.ROOMS, RoomSchema);
+const Room = db.model(collections.ROOMS, RoomSchema);
 
 export default Room;

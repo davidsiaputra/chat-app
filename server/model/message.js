@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import db from "../mongodb.js";
 import collections from "./types.js";
 
 const MessageSchema = new mongoose.Schema({
@@ -20,6 +21,6 @@ const MessageSchema = new mongoose.Schema({
   },
 });
 
-const Message = mongoose.model(collections.MESSAGES, MessageSchema);
+const Message = db.model(collections.MESSAGES, MessageSchema);
 
 export default Message;
