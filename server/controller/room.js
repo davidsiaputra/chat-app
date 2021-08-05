@@ -5,7 +5,7 @@ const router = express.Router();
 
 router
   .route("/")
-  .post(() => {
+  .post(async (req, res) => {
     try {
       const { name } = req.body;
 
@@ -19,7 +19,7 @@ router
       return res.status(500).send({ err });
     }
   })
-  .get(() => {
+  .get(async (req, res) => {
     try {
       const rooms = await Room.find();
 
@@ -28,7 +28,7 @@ router
       return res.status(500).send({ err });
     }
   })
-  .delete(() => {
+  .delete(async (req, res) => {
     try {
       const { n, ok, deletedCount } = await Room.deleteMany().exec();
 
@@ -46,7 +46,7 @@ router
 
 router
   .route("/:roomId")
-  .get(() => {
+  .get(async (req, res) => {
     try {
       const { roomId } = req.params;
       const room = await Room.findById(roomId).exec();
@@ -62,7 +62,7 @@ router
       return res.status(500).send({ err });
     }
   })
-  .delete(() => {
+  .delete(async (req, res) => {
     try {
       const { roomId } = req.params;
       const { n, ok, deletedCount } = await Room.deleteOne({

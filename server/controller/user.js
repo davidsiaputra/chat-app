@@ -13,6 +13,7 @@ router.post("/register", async (req, res) => {
       username,
       hashedPw,
     });
+
     console.log(user);
     return res.status(200).send({ user });
   } catch (err) {
@@ -40,7 +41,7 @@ router.post("/login", async (req, res) => {
     const passwordMatched = await bcrypt.compare(password, user.hashedPw);
 
     if (user && passwordMatched) {
-      req.session.user = user;
+      // req.session.user = user;
       return res.send(user);
     } else {
       return res
