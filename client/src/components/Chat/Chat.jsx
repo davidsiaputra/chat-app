@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Avatar, IconButton } from "@material-ui/core";
+import Pusher from "pusher-js";
+import axios from "../../api/axios";
 import {
   SearchOutlined,
   AttachFile,
@@ -11,6 +14,7 @@ import {
 import "./Chat.scss";
 
 function Chat() {
+  const { roomId } = useParams();
   const [seed, setSeed] = useState("");
   const [input, setInput] = useState("");
 
@@ -25,6 +29,30 @@ function Chat() {
 
     setInput("");
   };
+
+  // const [messages, setMessages] = useState([]);
+
+  // useEffect(() => {
+  //   axios.get(`/${roomId}`).then((response) => {
+  //     setMessages(response.data);
+  //   });
+  // }, []);
+
+  // useEffect(() => {
+  //   const pusher = new Pusher("474c37c4f9b392bf35fa", {
+  //     cluster: "us3",
+  //   });
+
+  //   const channel = pusher.subscribe(`rooms-${roomId}`);
+  //   channel.bind("updated", function (newMessage) {
+  //     setMessages([...messages, newMessage]);
+  //   });
+
+  //   return () => {
+  //     channel.unbind_all();
+  //     channel.unsubscribe();
+  //   };
+  // }, [messages, roomId]);
 
   return (
     <div className="chat">
@@ -50,7 +78,7 @@ function Chat() {
       <div className="chat__body">
         <p className={`chat__message ${true && "chat__receiver"}`}>
           <span className="chat__name">Apik</span>
-          Hey guys
+          Hey Guys
           <span className="chat__timestamp">3:52pm</span>
         </p>
         <p className="chat__message">Hey guys</p>

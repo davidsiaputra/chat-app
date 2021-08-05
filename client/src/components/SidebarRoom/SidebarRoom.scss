@@ -1,4 +1,4 @@
-.sidebarChat {
+.sidebarRoom {
   display: flex;
   padding: 20px;
   cursor: pointer;
@@ -8,7 +8,7 @@
     background-color: #ebebeb;
   }
 
-  .sidebarChat__info {
+  .sidebarRoom__info {
     margin-left: 15px;
 
     h2 {
