@@ -1,6 +1,5 @@
 import express from "express";
-import session from "express-session";
-import db from "./mongodb";
+import cors from "cors";
 const app = express();
 
 // config
@@ -8,14 +7,7 @@ const port = process.env.PORT || 3000;
 
 // middleware
 app.use(express.json());
-app.use(
-  session({
-    secret: "add a random secret string here",
-    resave: false,
-    saveUninitialized: true,
-  })
-);
-
+app.use(cors());
 // Routes
 app.get("/", () => {
   res.status(200).send("SUCCESS");

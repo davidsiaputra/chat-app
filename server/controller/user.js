@@ -1,25 +1,24 @@
-const app = require("express");
-const bcrypt = require("bcryptjs");
-const router = app.Router();
-const User = require("../model/user");
+import express from "express";
+import bcrypt from "bcryptjs";
+import User from "./model";
 
-router.post("/register", async (req, res, next) => {
+const router = express.Router();
+
+router.post("/register", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, password } = req.body;
 
     const hashedPw = await bcrypt.hash(password, 12);
-    const user = new User({ username, email, hashedPw });
+    const user = new User({ username, hashedPw });
 
     await user.save();
-    return res
-      .status(200)
-      .send({ sucess: true, user: { id: user._id, username: user.username } });
+    return res.status(200).send({ user });
   } catch (err) {
     return res.status(400).send({ err });
   }
 });
 
-router.post("/login", async (req, res, next) => {
+router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -41,9 +40,13 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.post("/logout", (req, res, next) => {
-  req.session.user = null;
-  return res.send("DONE");
+router.post("/logout", (req, res) => {
+  try {
+    req.session.user = null;
+    return res.send({ success: true });
+  } catch (err) {
+    res.status(500).send({ err });
+  }
 });
 
-module.exports = router;
+export default router;
