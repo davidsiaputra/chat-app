@@ -6,6 +6,8 @@ import "./sign-up.styles.scss";
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
 
+import usersApi from "../../api/user";
+
 export default class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -44,6 +46,12 @@ export default class SignUp extends Component {
       console.log("Failed to sign up, ", error.message);
       return;
     }
+  };
+
+  register = () => {
+    usersApi.register(username, password).then(() => {
+      alert("Successfully registered");
+    });
   };
 
   render() {
@@ -87,7 +95,7 @@ export default class SignUp extends Component {
             value={this.state.confirmPassword}
             handleChange={this.handleChange}
           />
-          <div className="buttons">
+          <div className="buttons" onclick={register}>
             <CustomButton type="submit">SIGN UP</CustomButton>
           </div>
         </form>

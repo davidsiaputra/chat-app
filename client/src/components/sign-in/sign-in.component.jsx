@@ -6,6 +6,8 @@ import "./sign-in.styles.scss";
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
 
+import usersApi from "../../api/user";
+
 export default class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -25,6 +27,12 @@ export default class SignIn extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+  };
+
+  login = () => {
+    usersApi.login(username, password).then(() => {
+      alert("Successfully login");
+    });
   };
 
   render() {
@@ -54,7 +62,7 @@ export default class SignIn extends Component {
             value={this.state.password}
             handleChange={this.handleChange}
           />
-          <div className="buttons">
+          <div className="buttons" onclick={login}>
             <CustomButton type="submit">SIGN IN</CustomButton>
           </div>
         </form>
