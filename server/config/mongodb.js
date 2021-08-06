@@ -25,11 +25,27 @@ db.once("open", () => {
         break;
       }
 
-      case "update": {
-        console.log("Update in rooms collection");
+      default:
+        console.log(`${change.operationType} is not handled`);
+        return;
+    }
+  });
 
-        const { documentKey } = change;
-        pusher.trigger(`rooms-${documentKey._id}}`, "updated", {});
+  const messagesCollection = db.collection(collections.MESSAGES);
+  const messagesChangeStream = messagesCollection.watch();
+
+  messagesChangeStream.on("change", (change) => {
+    switch (change.operationType) {
+      case "insert": {
+        console.log("Update in messages collection");
+
+        const { fullDocument } = change;
+        pusher.trigger(
+          `rooms-${fullDocument.roomId.toString()}`,
+          "insert",
+          fullDocument
+        );
+        break;
       }
 
       default:

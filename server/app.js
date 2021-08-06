@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import morgan from "morgan";
 import session from "express-session";
 import ConnectRedis from "connect-redis";
 import redisClient from "./config/redis.js";
@@ -22,15 +23,16 @@ app.use(
   })
 );
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan("common"));
 app.use(
   session({
     secret: ["1231231231231231312312312"],
     name: "chatAppSid",
     cookie: {
-      // httpOnly: true,
+      httpOnly: true,
       // secure: true,
-      // sameSite: true,
-      maxAge: 600000,
+      sameSite: true,
+      maxAge: 1000 * 60 * 60 * 24,
     },
     store: new RedisStore({ client: redisClient, ttl: 86400 }),
     resave: false,
@@ -39,13 +41,13 @@ app.use(
 );
 
 // Routes
-app.get("/", async (req, res) => {
-  return res.status(200).send("SUCCESS");
-});
-
 app.use("/user", userRoutes);
 app.use("/room", roomRoutes);
 app.use("/message", messageRoutes);
+
+app.get("*", async (req, res) => {
+  return res.status(400).send({ err: "Route does not exists" });
+});
 
 app.listen(port, () => {
   console.log(`server running on port ${port}`);
