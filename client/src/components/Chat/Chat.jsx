@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { DateTime } from "luxon";
 import { Avatar, IconButton } from "@material-ui/core";
 import Pusher from "pusher-js";
-import axios from "../../api/axios";
 import {
   SearchOutlined,
   AttachFile,
@@ -10,57 +9,77 @@ import {
   InsertEmoticon,
   Mic,
 } from "@material-ui/icons";
+import roomsApi from "../../api/room";
 
 import "./Chat.scss";
+import messageApi from "../../api/message";
 
-function Chat() {
-  const { roomId } = useParams();
+function Chat({ currRoom }) {
+  const { _id, name } = currRoom;
   const [seed, setSeed] = useState("");
   const [input, setInput] = useState("");
-
-  useEffect(() => {
-    setSeed(Math.floor(1000 * Math.random()));
-  }, []);
+  const [messages, setMessages] = useState([]);
 
   const sendMessage = (event) => {
     event.preventDefault();
 
-    console.log("Yout typed", input);
+    messageApi
+      .createMessage({
+        roomId: _id,
+        userId: "610b36859c7297d9d864335a",
+        username: "test",
+        text: input,
+      })
+      .then((message) => {
+        if (message) {
+          alert("SUCCESS");
+        } else {
+          alert("FAILED");
+        }
+      });
 
     setInput("");
   };
 
-  // const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    setSeed(_id);
+    roomsApi.getRoomMessages(_id).then((messages) => {
+      if (messages) {
+        setMessages(messages);
+      }
+    });
+  }, [_id]);
 
-  // useEffect(() => {
-  //   axios.get(`/${roomId}`).then((response) => {
-  //     setMessages(response.data);
-  //   });
-  // }, []);
+  useEffect(() => {
+    const pusher = new Pusher("474c37c4f9b392bf35fa", {
+      cluster: "us3",
+    });
 
-  // useEffect(() => {
-  //   const pusher = new Pusher("474c37c4f9b392bf35fa", {
-  //     cluster: "us3",
-  //   });
+    const channel = pusher.subscribe(`rooms-${_id}`);
+    channel.bind("insert", function (newMessage) {
+      setMessages([...messages, newMessage]);
+    });
 
-  //   const channel = pusher.subscribe(`rooms-${roomId}`);
-  //   channel.bind("updated", function (newMessage) {
-  //     setMessages([...messages, newMessage]);
-  //   });
-
-  //   return () => {
-  //     channel.unbind_all();
-  //     channel.unsubscribe();
-  //   };
-  // }, [messages, roomId]);
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+      pusher.disconnect();
+    };
+  }, [messages, _id]);
 
   return (
     <div className="chat">
       <div className="chat__header">
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
         <div className="chat__headerInfo">
-          <h3>Room Name</h3>
-          <p>Last seen at...</p>
+          <h3>{name}</h3>
+          <p>
+            {messages.length != 0
+              ? DateTime.fromISO(
+                  messages[messages.length - 1].createdAt
+                ).toLocaleString(DateTime.TIME_SIMPLE)
+              : "Unknown"}
+          </p>
         </div>
         <div className="chat__headerRight">
           <IconButton>
@@ -76,12 +95,15 @@ function Chat() {
       </div>
 
       <div className="chat__body">
-        <p className={`chat__message ${true && "chat__receiver"}`}>
-          <span className="chat__name">Apik</span>
-          Hey Guys
-          <span className="chat__timestamp">3:52pm</span>
-        </p>
-        <p className="chat__message">Hey guys</p>
+        {messages.map(({ _id, userId, username, text, createdAt }) => (
+          <p key={_id} className={`chat__message ${true && "chat__receiver"}`}>
+            <span className="chat__name">{username}</span>
+            {text}
+            <span className="chat__timestamp">
+              {DateTime.fromISO(createdAt).toLocaleString(DateTime.TIME_SIMPLE)}
+            </span>
+          </p>
+        ))}
       </div>
 
       <div className="chat__footer">

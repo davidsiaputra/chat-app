@@ -1,6 +1,7 @@
 import redis from "redis";
 import bluebird from "bluebird";
 
+// Alloy async function
 bluebird.promisifyAll(redis);
 
 const host = process.env.HOSTNAME || "localhost";

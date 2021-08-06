@@ -1,10 +1,10 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 
-import redisClient from "../config/redis.js";
 import User from "../model/user.js";
+import isAuth from "../middlewares/isAuth.js";
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router.post("/register", async (req, res) => {
   try {
@@ -45,11 +45,13 @@ router.post("/login", async (req, res) => {
     const passwordMatched = await bcrypt.compare(password, user.hashedPw);
 
     if (passwordMatched) {
-      // req.session.save(() => {
+      // Do not want to save the hashedPw in redis or be returned to the client
       user.hashedPw = null;
+
+      // This adds user to req.session and express-session saves it in the store
       req.session.user = user;
+
       return res.status(200).send({ user });
-      // });
     } else {
       return res
         .status(200)
@@ -61,15 +63,11 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/logout", async (req, res) => {
+router.post("/logout", isAuth, async (req, res) => {
   try {
-    if (req.session.user) {
-      req.session.destroy(() => {
-        return res.send({ success: true });
-      });
-    } else {
-      console.log("NOT LOGGED IN");
-    }
+    req.session.destroy(() => {
+      return res.send({ success: true });
+    });
   } catch (err) {
     res.status(500).send({ err });
   }
