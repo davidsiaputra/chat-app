@@ -1,5 +1,6 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
+import userApi from "../../api/user";
 
 import "./sign-in.styles.scss";
 
@@ -14,6 +15,7 @@ export default class SignIn extends Component {
       username: "",
       email: "",
       password: "",
+      user: null,
     };
   }
 
@@ -25,6 +27,41 @@ export default class SignIn extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+
+    userApi.login(this.state).then((user) => {
+      if (user) {
+        this.setState({
+          username: "",
+          email: "",
+          password: "",
+          user,
+        });
+
+        // set user
+        alert("SUCCESS");
+      } else {
+        alert("FAIL");
+      }
+    });
+  };
+
+  handleLogout = (event) => {
+    event.preventDefault();
+
+    userApi.logout().then((success) => {
+      if (success) {
+        this.setState({
+          username: "",
+          email: "",
+          password: "",
+          user: null,
+        });
+
+        alert("LOGGED OUT");
+      } else {
+        alert("Fail to log out");
+      }
+    });
   };
 
   render() {
@@ -58,6 +95,11 @@ export default class SignIn extends Component {
             <CustomButton type="submit">SIGN IN</CustomButton>
           </div>
         </form>
+        {this.state.user ? (
+          <div className="buttons">
+            <CustomButton onClick={this.handleLogout}>SIGN OUT</CustomButton>
+          </div>
+        ) : null}
       </div>
     );
   }

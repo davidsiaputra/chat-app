@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import db from "../mongodb.js";
+import db from "../config/mongodb.js";
 import collections from "./types.js";
 
 const RoomSchema = new mongoose.Schema({
