@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 import morgan from "morgan";
 import session from "express-session";
 import ConnectRedis from "connect-redis";
@@ -11,6 +12,7 @@ import messageRoutes from "./controller/message.js";
 const app = express();
 
 // config
+dotenv.config();
 const port = process.env.PORT || 9000;
 
 const RedisStore = ConnectRedis(session);
@@ -26,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("common"));
 app.use(
   session({
-    secret: ["1231231231231231312312312"],
+    secret: [process.env.SESSION_SECRET1],
     name: "chatAppSid",
     cookie: {
       httpOnly: true,

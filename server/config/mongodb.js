@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 import pusher from "./pusher.js";
 import collections from "../model/types.js";
+import dotenv from "dotenv";
+dotenv.config();
 
-const db_url = `mongodb+srv://admin:oWLwdGhxt1rERPy9@cluster0.fq1ip.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const db_url = process.env.DB_URL;
 mongoose.connect(db_url, {
   useCreateIndex: true,
   useNewUrlParser: true,
